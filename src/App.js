@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'antd';
 import AuthForm from './components/AuthForm';
+import DetailRegistrationForm from './components/DetailRegistrationForm';
 import './App.scss';
 import 'antd/dist/antd.css';
 import firebase from "firebase/app";
+import "firebase/storage";
 import "firebase/database";
 import "firebase/auth";
 import firebaseConfig from './firebaseConfig';
@@ -14,12 +15,22 @@ const db = firebase.database();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [is_auth, set_is_auth] = useState(false);
+  const [user, set_user] = useState();
+
+  const isRegistrationComplete = !!user?.profile;
+
+  useEffect(() => {
+    if (!!user?.uid) {
+      db.ref('users/' + user.uid).once('value', snapshot => {
+        set_user({ ...user, profile: snapshot.val() });
+      });
+    }
+  }, [user?.uid]);
 
   useEffect(() => {
     firebaseApp.auth().onAuthStateChanged(userAuth => {
       setIsLoading(false);
-      set_is_auth(!!userAuth);
+      set_user(userAuth);
     });
   }, []);
 
@@ -47,7 +58,8 @@ const App = () => {
         <div onClick={signOut} style={{ cursor: 'pointer' }}>Logout</div>
       </div>
       <div style={{ textAlign: 'center' }}>
-        {!is_auth && <AuthForm login={login} register={register} isLoading={isLoading} />}
+        {!user && <AuthForm login={login} register={register} isLoading={isLoading} />}
+        {(!!user && !isRegistrationComplete) && <DetailRegistrationForm />}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Typography, Button, Space, Tabs, Upload, message } from 'antd';
-import { SaveOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { SaveOutlined, UnlockOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
 
 const { Title } = Typography;
@@ -61,7 +61,7 @@ function Form(props) {
         <Button onClick={reset} shape="round" icon={<CloseCircleOutlined />} size={10}>
           Reset
         </Button>
-        <Button onClick={isRegister ? register : login} type="danger" shape="round" icon={props.isLoading ? <LoadingOutlined /> : <SaveOutlined />} size={10}>
+        <Button onClick={isRegister ? register : login} type="danger" shape="round" icon={props.isLoading ? <LoadingOutlined /> : <UnlockOutlined />} size={10}>
           {isRegister ? 'Register' : 'Login'}
         </Button>
       </div>
