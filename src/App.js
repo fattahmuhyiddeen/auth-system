@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col } from 'antd';
-import Form from './components/Form';
+import AuthForm from './components/AuthForm';
 import './App.scss';
 import 'antd/dist/antd.css';
 import firebase from "firebase/app";
@@ -12,7 +12,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
-function App() {
+const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [is_auth, set_is_auth] = useState(false);
 
@@ -38,17 +38,17 @@ function App() {
     });
   }
 
+  const signOut = () => firebaseApp.auth().signOut();
+
   return (
     <div className="container">
-      <div className="header">Registration system</div>
-      <Row>
-        <Col span={24} className="small-padding">
-          {!is_auth && <Form login={login} register={register} isLoading={isLoading} />}
-        </Col>
-        {/* <Col span={19} className="small-padding">
-          <div> List</div>
-        </Col> */}
-      </Row>
+      <div className="header">
+        <div>Auth system</div>
+        <div onClick={signOut} style={{ cursor: 'pointer' }}>Logout</div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        {!is_auth && <AuthForm login={login} register={register} isLoading={isLoading} />}
+      </div>
     </div>
   );
 }
