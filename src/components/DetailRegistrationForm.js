@@ -5,36 +5,19 @@ const { TabPane } = Tabs;
 
 function Form(props) {
   const [name, setName] = useState('');
-  const [tmpImg, setTmpImg] = useState();
+  const [img, setImg] = useState();
   const [isShowModal, setIsShowModal] = useState();
 
   const beforeUpload = (file, fileList) => {
     // Access file content here and do something with it
     const reader = new FileReader();
 
-    reader.onload = e => {
-      setTmpImg(e.target.result);
-    };
+    reader.onload = e => setImg(e.target.result);
     reader.readAsDataURL(file)
 
     // Prevent upload
     return false;
   }
-  const onImageChange = info => {
-    if (info.file.status === 'uploading') {
-      // this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      // getBase64(info.file.originFileObj, imageUrl =>
-      //   this.setState({
-      //     imageUrl,
-      //     loading: false,
-      //   }),
-      // );
-    }
-  };
 
   const uploadButton = (
     <div>
@@ -44,7 +27,7 @@ function Form(props) {
   );
 
   const showModal = () => {
-    if (!name || !tmpImg) {
+    if (!name || !img) {
       alert('Please fill all details');
       return;
     }
@@ -59,12 +42,10 @@ function Form(props) {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         beforeUpload={beforeUpload}
-      // onChange={onImageChange}
       >
         {/* {uploadButton} */}
-        {!!tmpImg ? <img src={tmpImg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {!!img ? <img src={img} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
         {/* {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
       </Upload>
 
@@ -74,12 +55,12 @@ function Form(props) {
       <Modal
         title="Preview Profile Details"
         visible={isShowModal}
-        onOk={() => null}
-        onCancel={() => setIsShowModal()}
+        onOk={() => !props.isRegistering && props.completeRegister({ img, name })}
+        onCancel={() => setIsShowModal(false)}
       >
         <p>Name: {name}</p>
         <p>Passport / IC</p>
-        <img src={tmpImg} width="100%" height="auto" />
+        <img src={img} width="100%" height="auto" />
       </Modal>
     </Space>
   )

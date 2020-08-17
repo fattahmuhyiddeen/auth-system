@@ -12,9 +12,9 @@ import firebaseConfig from './firebaseConfig';
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [user, set_user] = useState();
 
   const isRegistrationComplete = !!user?.profile;
@@ -51,6 +51,34 @@ const App = () => {
 
   const signOut = () => firebaseApp.auth().signOut();
 
+  const dataURLtoFile = (dataurl, filename) => {
+    let arr = dataurl.split(','),
+      type = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type });
+  }
+
+  const completeRegister = ({ img, name }) => {
+    setIsRegistering(true);
+    const filename = user.uid + '.jpg';
+    let storageRef = firebase.storage().ref(filename);
+    storageRef.put(dataURLtoFile(img, filename)).then((e) => {
+      const profile = { name, filename };
+      firebase.database().ref('users/' + user.uid).set(profile).then(() => {
+        set_user({ ...user, profile });
+      })
+    }).catch(() => {
+      setIsRegistering(false);
+    })
+  }
+
   return (
     <div className="container">
       <div className="header">
@@ -59,7 +87,7 @@ const App = () => {
       </div>
       <div style={{ textAlign: 'center' }}>
         {!user && <AuthForm login={login} register={register} isLoading={isLoading} />}
-        {(!!user && !isRegistrationComplete) && <DetailRegistrationForm />}
+        {(!!user && !isRegistrationComplete) && <DetailRegistrationForm completeRegister={completeRegister} isRegistering={isRegistering} />}
       </div>
     </div>
   );
