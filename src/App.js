@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AuthForm from './components/AuthForm';
 import DetailRegistrationForm from './components/DetailRegistrationForm';
+import Profile from './components/Profile';
 import './App.scss';
 import 'antd/dist/antd.css';
 import firebase from "firebase/app";
@@ -72,7 +73,10 @@ const App = () => {
     storageRef.put(dataURLtoFile(img, filename)).then((e) => {
       const profile = { name, filename };
       firebase.database().ref('users/' + user.uid).set(profile).then(() => {
+        setIsRegistering(false);
         set_user({ ...user, profile });
+      }).catch(() => {
+        setIsRegistering(false);
       })
     }).catch(() => {
       setIsRegistering(false);
@@ -88,6 +92,7 @@ const App = () => {
       <div style={{ textAlign: 'center' }}>
         {!user && <AuthForm login={login} register={register} isLoading={isLoading} />}
         {(!!user && !isRegistrationComplete) && <DetailRegistrationForm completeRegister={completeRegister} isRegistering={isRegistering} />}
+        {(!!user && isRegistrationComplete) && <Profile profile={user.profile} />}
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { Input, Typography, Button, Space, Tabs, Upload, message } from 'antd';
 import { SaveOutlined, UnlockOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
 
-const { Title } = Typography;
 function Form(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

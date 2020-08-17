@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Typography, Button, Space, Tabs, Upload, Modal } from 'antd';
 import { SaveOutlined, UnlockOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-const { TabPane } = Tabs;
+const { Title, Text } = Typography;
 
 function Form(props) {
   const [name, setName] = useState('');
@@ -36,6 +36,8 @@ function Form(props) {
 
   return (
     <Space size="small" direction="vertical" style={{ marginTop: '1em' }}>
+      <Title level={4}>Status: In-Complete Registration</Title>
+      <Text disabled>Please complete your registration</Text>
       <Input value={name} addonBefore="Name" onChange={e => setName(e.target.value)} />
       <Upload
         name="avatar"
@@ -58,9 +60,11 @@ function Form(props) {
         onOk={() => !props.isRegistering && props.completeRegister({ img, name })}
         onCancel={() => setIsShowModal(false)}
       >
+        {props.isRegistering && <LoadingOutlined />}
         <p>Name: {name}</p>
         <p>Passport / IC</p>
         <img src={img} width="100%" height="auto" />
+        {props.isRegistering && <LoadingOutlined />}
       </Modal>
     </Space>
   )
