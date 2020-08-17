@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Typography, Button, Space, Tabs, Upload, message } from 'antd';
-import { SaveOutlined, UnlockOutlined, CloseCircleOutlined, LoadingOutlined, PlusOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Input, Button, Space, Tabs } from 'antd';
+import { UnlockOutlined, CloseCircleOutlined, LoadingOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
 
 function Form(props) {
@@ -38,7 +38,7 @@ function Form(props) {
       alert('Please fill all details');
       return;
     }
-    if (password != rePassword) {
+    if (password !== rePassword) {
       alert('Please make sure password and re-password match');
       return;
     }
